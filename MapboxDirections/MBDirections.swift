@@ -302,14 +302,38 @@ open class Directions: NSObject {
      */
     @objc(URLForCalculatingDirectionsWithOptions:)
     open func url(forCalculating options: DirectionsOptions) -> URL {
-        let params = options.params + [
-            URLQueryItem(name: "access_token", value: accessToken),
+        var params = options.params + [
+            URLQueryItem(name: "key", value: accessToken),
         ]
         
-        let unparameterizedURL = URL(string: options.path, relativeTo: apiEndpoint)!
+        var server = apiEndpoint
+        var path = options.path
+        
+        // only from phonemaps server
+        params = params.filter {
+            switch $0.name {
+            case "key", "roundabout_exits", "continue_straight",
+                "waypoint_names", "voice_units", "voice_instructions", "language",
+                "banner_instructions", "annotations":
+                return false
+            default:
+                return true
+            }
+        }
+        
+        let loc = path.split(separator: "/").last?.description
+        server = URL(string: "http://app.phonemaps.eu:3434")!
+        path = "services/route2"
+        params = params + [
+            URLQueryItem(name: "loc", value: loc),
+        ]
+        // end of phonemaps
+        
+        let unparameterizedURL = URL(string: path, relativeTo: server)!
         var components = URLComponents(url: unparameterizedURL, resolvingAgainstBaseURL: true)!
         components.queryItems = params
         return URL(string: components.url!.absoluteString.replacingOccurrences(of: "%3B", with: ";"))!
+        
     }
     
     /**

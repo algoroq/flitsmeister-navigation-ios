@@ -5,9 +5,9 @@
         "package": "MapLibre GL Native",
         "repositoryURL": "https://github.com/maplibre/maplibre-gl-native-distribution",
         "state": {
-          "branch": null,
-          "revision": "d524c18d8c572db72c753f88492c36b9749725e1",
-          "version": "5.12.0"
+          "branch": "master",
+          "revision": "d761956e81e74d8bdbfba31e0ec3a75616190658",
+          "version": null
         }
       }
     ]
